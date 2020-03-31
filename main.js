@@ -4,9 +4,9 @@ const bodyParser = require("body-parser")
 const serv = express()
     serv.use(express.static("public"))
     serv.use(bodyParser.json())
-    app.use(bodyParser.urlencoded({extended: true}))
+    serv.use(bodyParser.urlencoded({extended: true}))
 
-// app.post("localhost:5678",(req,res)=>{
+// serv.post("localhost:5678",(req,res)=>{
 //     connection.query(`SELECT idaccount FROM account WHERE username = '${pseudo}' AND password = '${password}'` , 
 //     function (error, results, fields) {
 //         if (error) throw error;
@@ -15,7 +15,7 @@ const serv = express()
 //     connection.end();
 // })
 
-app.get("localhost:5678",(req,res)=>{
+serv.get("/",(req,res)=>{
     connection.query(`SELECT idaccount FROM account WHERE username = '${pseudo}' AND password = '${password}'` , 
     function (error, results, fields) {
         if (error) throw error;
@@ -23,6 +23,9 @@ app.get("localhost:5678",(req,res)=>{
     });
     connection.end();
 })
+serv.listen(5678, function () {
+    console.log('listening on port 3000')
+  })
 
 var connection = mysql.createConnection({
     host     : 'localhost',
