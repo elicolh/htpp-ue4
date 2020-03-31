@@ -23,7 +23,7 @@ serv.post("/",(req,res)=>{
         console.log('mdp : ' + req.body.password)
         console.log(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`)
         console.log(results)
-        res.json(results[0].idaccount || 0)
+        res.json({ID:results[0].idaccount || 0})
     });
     connection.end();
 })
