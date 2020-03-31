@@ -6,11 +6,20 @@ const serv = express()
     serv.use(bodyParser.json())
     app.use(bodyParser.urlencoded({extended: true}))
 
-app.post("localhost:5678",(req,res)=>{
+// app.post("localhost:5678",(req,res)=>{
+//     connection.query(`SELECT idaccount FROM account WHERE username = '${pseudo}' AND password = '${password}'` , 
+//     function (error, results, fields) {
+//         if (error) throw error;
+//         // res.json({ok:})
+//     });
+//     connection.end();
+// })
+
+app.get("localhost:5678",(req,res)=>{
     connection.query(`SELECT idaccount FROM account WHERE username = '${pseudo}' AND password = '${password}'` , 
     function (error, results, fields) {
         if (error) throw error;
-        // res.json({ok:})
+        res.json(results)
     });
     connection.end();
 })
