@@ -26,14 +26,14 @@ serv.post("/",(req,res)=>{
     connection.query(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`, 
     function (error, results, fields) {
         if (error) throw error;
-        console.log("pseudo : " + req.body.pseudo)
-        console.log('mdp : ' + req.body.password)
-        console.log(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`)
-        var nb = results[0].idaccount || -1
-        console.log(results)
-        console.log(JSON.stringify({ID:nb}))
+        var nb = results[0].idaccount?results[0].idaccount : -1
         res.json({ID:nb})
         connection.end();
+        // console.log("pseudo : " + req.body.pseudo)
+        // console.log('mdp : ' + req.body.password)
+        // console.log(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`)
+        // console.log(results)
+        // console.log(JSON.stringify({ID:nb}))
     });
 })
 serv.listen(5678, function () {
