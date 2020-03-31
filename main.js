@@ -26,7 +26,11 @@ serv.post("/",(req,res)=>{
     connection.query(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`, 
     function (error, results, fields) {
         if (error) throw error;
-        var nb = results[0].idaccount?results[0].idaccount : -1
+        try{
+            var nb = results[0].idaccount
+        }catch{
+            var nb = 0
+        }
         res.json({ID:nb})
         connection.end();
         // console.log("pseudo : " + req.body.pseudo)
