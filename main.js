@@ -16,6 +16,7 @@ const serv = express()
 // })
 // "SELECT idaccount FROM account WHERE username = 'server' AND password = 'a66a8e9b1cf6d2032724c37305b83cdda18c904e';"
 serv.post("/",(req,res)=>{
+    connection.connect()
     connection.query(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`, 
     function (error, results, fields) {
         if (error) throw error;
@@ -23,9 +24,10 @@ serv.post("/",(req,res)=>{
         console.log('mdp : ' + req.body.password)
         console.log(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`)
         var nb = results[0].idaccount || 0
+        console.log(results)
         console.log(JSON.stringify({ID:nb}))
         res.json({ID:nb})
-        connection.end();
+        //connection.end();
     });
 })
 serv.listen(5678, function () {
