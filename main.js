@@ -19,12 +19,14 @@ serv.post("/",(req,res)=>{
     connection.query(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`, 
     function (error, results, fields) {
         if (error) throw error;
+        console.log("pseudo : " + req.body.pseudo)
+        console.log('mdp' + req.body.password)
         res.json(results[0].idaccount || 0)
     });
     connection.end();
 })
 serv.listen(5678, function () {
-    console.log('listening on port 3000')
+    console.log('listening on port 5678')
   })
 
 var connection = mysql.createConnection({
