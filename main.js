@@ -14,9 +14,9 @@ const serv = express()
 //     });
 //     connection.end();
 // })
-
+// `SELECT idaccount FROM account WHERE username = '${pseudo}' AND password = '${password}'`
 serv.get("/",(req,res)=>{
-    connection.query(`SELECT idaccount FROM account WHERE username = '${pseudo}' AND password = '${password}'` , 
+    connection.query("SELECT idaccount FROM account WHERE username = 'server' AND password = 'a66a8e9b1cf6d2032724c37305b83cdda18c904e';", 
     function (error, results, fields) {
         if (error) throw error;
         res.json(results)
