@@ -16,6 +16,12 @@ const serv = express()
 // })
 // "SELECT idaccount FROM account WHERE username = 'server' AND password = 'a66a8e9b1cf6d2032724c37305b83cdda18c904e';"
 serv.post("/",(req,res)=>{
+    var connection = mysql.createConnection({
+        host     : 'localhost',
+        user     : 'authenconnect',
+        password : 'elicolelo',
+        database : 'account'
+    });
     connection.connect()
     connection.query(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`, 
     function (error, results, fields) {
@@ -27,16 +33,9 @@ serv.post("/",(req,res)=>{
         console.log(results)
         console.log(JSON.stringify({ID:nb}))
         res.json({ID:nb})
-        //connection.end();
+        connection.end();
     });
 })
 serv.listen(5678, function () {
     console.log('listening on port 5678')
   })
-
-var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'authenconnect',
-    password : 'elicolelo',
-    database : 'account'
-});
