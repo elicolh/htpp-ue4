@@ -22,10 +22,11 @@ serv.post("/",(req,res)=>{
         console.log("pseudo : " + req.body.pseudo)
         console.log('mdp : ' + req.body.password)
         console.log(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`)
-        console.log(results)
-        res.json({ID:results[0].idaccount || 0})
+        var nb = results[0].idaccount || 0
+        console.log(JSON.stringify({ID:nb}))
+        res.json({ID:nb})
+        connection.end();
     });
-    connection.end();
 })
 serv.listen(5678, function () {
     console.log('listening on port 5678')
