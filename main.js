@@ -27,14 +27,14 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
     function (error, results, fields) {//reponse de la query
     if (error) throw error;//si reponse mal passée on arrete le programme et on print l'erreur
     try{
-        var res = results[0].idaccount
+        var result = results[0].idaccount
     }catch{
-        var res = false
+        var result = false
     }
-        if(res){//si la query a retourné un id : le mdp est correct
+        if(result){//si la query a retourné un id : le mdp est correct
             res.json({ID:1})//on repond a la requete
             console.log(req.body)
-            connection.query(`UPDATE account SET deviceid = '${req.body.Deviceid}' WHERE idaccount = '${res}'`,
+            connection.query(`UPDATE account SET deviceid = '${req.body.Deviceid}' WHERE idaccount = '${result}'`,
             function(err,results,fields){//réponse de la 2e query
                 if(err) throw err//si reponse mal passée on arrete le programme et on print l'erreur
             })
