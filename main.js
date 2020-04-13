@@ -26,10 +26,15 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
     connection.query(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`,//l'objet req.body contient les arguments de la requete (pseudo password et deviceid)
     function (error, results, fields) {//reponse de la query
     if (error) throw error;//si reponse mal passée on arrete le programme et on print l'erreur
-        if(results[0].idaccount){//si la query a retourné un id : le mdp est correct
+    try{
+        var res = results[0].idaccount
+    }catch{
+        var res = false
+    }
+        if(res){//si la query a retourné un id : le mdp est correct
             res.json({ID:1})//on repond a la requete
             console.log(req.body)
-            connection.query(`UPDATE account SET deviceid = '${req.body.Deviceid}' WHERE idaccount = '${results[0].idaccount}'`,
+            connection.query(`UPDATE account SET deviceid = '${req.body.Deviceid}' WHERE idaccount = '${res}'`,
             function(err,results,fields){//réponse de la 2e query
                 if(err) throw err//si reponse mal passée on arrete le programme et on print l'erreur
             })
