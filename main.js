@@ -23,7 +23,7 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
         database : 'account'
     });
     connection.connect()//init de la connection a la base sql
-    connection.query(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`, 
+    connection.query(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`,//l'objet req.body contient les arguments de la requete (pseudo password et deviceid)
     function (error, results, fields) {//reponse de la query
         if (error) throw error;//si reponse mal passée on arrete le programme et on print l'erreur
         connection.end((err)=>{//une fois la connection fermée:
