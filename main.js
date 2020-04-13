@@ -30,6 +30,8 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
         var result = results[0].idaccount
     }catch{
         var result = false
+        console.log("---------------mauvaise connection---------------")
+        console.log(req.body)
     }
         if(result){//si la query a retourné un id : le mdp est correct
             res.json({ID:1})//on repond a la requete
