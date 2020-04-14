@@ -56,14 +56,17 @@ serv.post("/",(req,response)=>{//si on a une requete de type POST au sous domain
                                     connection.query(`UPDATE team SET sessionport = ${port} WHERE idTeam = ${idTeam};`,
                                     function(erreur1,resultats1,fields1){
                                         if(erreur1)throw erreur1
-                                        connection.query(`UPDATE port SET idTeam = ${idTeam} WHERE port = ${port};`,handleQueryResponse)
+                                        connection.query(`UPDATE port SET idTeam = ${idTeam} WHERE port = ${port};`,
+                                        function(a,b,c){
+                                            if(a)throw a 
+                                            connection.end()
+                                        })
                                     })
                                     response.json({port:port})//on répond au json avec le nouveau port
                                 }else{
                                     console.error("la query a pas retourné de port sur lequel ouvrir la session")
                                     response.json({port:0})//code erreur
                                 }
-                                connection.end()
                             })
                         }
                     })
