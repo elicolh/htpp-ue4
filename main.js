@@ -68,7 +68,7 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
                 }
             })
             console.log(req.body)
-            connection.query(`UPDATE account SET deviceid = '${req.body.Deviceid}' WHERE idaccount = '${idaccount}'`,
+            // connection.query(`UPDATE account SET deviceid = '${req.body.Deviceid}' WHERE idaccount = '${idaccount}'`,
             function(err,results,fields){//réponse de la 2e query
                 if(err) throw err//si reponse mal passée on arrete le programme et on print l'erreur
             })
