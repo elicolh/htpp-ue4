@@ -56,10 +56,7 @@ serv.post("/",(req,response)=>{//si on a une requete de type POST au sous domain
                                     connection.query(`UPDATE team SET sessionport = ${port} WHERE idTeam = ${idTeam};`,
                                     function(erreur1,resultats1,fields1){
                                         if(erreur1)throw erreur1
-                                        connexion.query(`UPDATE port SET idTeam = ${idTeam} WHERE port = ${port};`,
-                                        function(a,b,c){
-                                            if(a)throw a
-                                        })
+                                        connection.query(`UPDATE port SET idTeam = ${idTeam} WHERE port = ${port};`,handleQueryResponse)
                                     })
                                     response.json({port:port})//on répond au json avec le nouveau port
                                 }else{
@@ -91,3 +88,6 @@ serv.post("/",(req,response)=>{//si on a une requete de type POST au sous domain
 serv.listen(6999, function () {//on lance l'écoute du serv
     console.log('listening on port 6999')
 })
+function handleQueryResponse(err,res,field){
+    if(err) throw err
+}
