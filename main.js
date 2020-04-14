@@ -41,7 +41,7 @@ serv.post("/",(req,response)=>{//si on a une requete de type POST au sous domain
                         console.log("sessionport renvoyé : " + sessionport)
                         if(sessionport){//si un port lui est attribué => session déjà lancée
                             response.json({port:sessionport})//on repond a la requete avec le port correspondant à sa team
-                            connection.end()
+                            //connection.end()
                         }else{
                             connection.query("SELECT port FROM port WHERE idTeam IS NULL LIMIT 1;",
                             function(erreur, resultats, champs){
@@ -59,7 +59,7 @@ serv.post("/",(req,response)=>{//si on a une requete de type POST au sous domain
                                         connection.query(`UPDATE port SET idTeam = ${idTeam} WHERE port = ${port};`,
                                         function(a,b,c){
                                             if(a)throw a 
-                                            connection.end()
+                                            //connection.end()
                                         })
                                     })
                                     response.json({port:port})//on répond au json avec le nouveau port
@@ -73,7 +73,7 @@ serv.post("/",(req,response)=>{//si on a une requete de type POST au sous domain
                 }else{
                     console.log("PAS DANS UNE TEAM")//TODO: supporter ça
                     response.json({port:-1})//code erreur
-                    connection.end()
+                    //connection.end()
                 }
             })
             console.log(req.body)
@@ -84,7 +84,7 @@ serv.post("/",(req,response)=>{//si on a une requete de type POST au sous domain
             //on ferme la nvle connection
         }else{//si la query a rien retourné : le mdp est faux
             response.json({ID:0})//on reponds a la requete
-            connection.end()
+            //connection.end()
         }
     });
 })
