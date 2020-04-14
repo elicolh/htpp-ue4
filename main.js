@@ -1,6 +1,7 @@
 const mysql = require("mysql")
 const express = require("express")
 const bodyParser = require("body-parser")
+var exec = require('child_process').execFile;
 const serv = express()
     serv.use(express.static("public"))
     serv.use(bodyParser.json())
@@ -63,7 +64,8 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
                                     port = false
                                 }
                                 if(port){
-                                   //TODO: lancer session
+                                    exec('HelloJithin.exe'
+                                    , ['-log', `-port=${port}`]);
                                    res.json({port:port})
                                 }else{
                                     console.error("la query a pas retourné de port sur lequel ouvrir la session")
