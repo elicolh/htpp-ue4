@@ -40,6 +40,7 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
                         console.log("sessionport renvoyé : " + sessionport)
                         if(sessionport){//si un port lui est attribué => session déjà lancée
                             res.json({port:sessionport})//on repond a la requete avec le port correspondant à sa team
+                            connection.end()
                         }else{
                             connection.query("SELECT port FROM port WHERE idTeam IS  NULL LIMIT 1;",
                             function(erreur, resultats, champs){
@@ -60,6 +61,7 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
                                     console.error("la query a pas retourné de port sur lequel ouvrir la session")
                                     res.json({port:0})//code erreur
                                 }
+                                connection.end()
                             })
                         }
                     })
@@ -69,10 +71,10 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
             })
             console.log(req.body)
             // connection.query(`UPDATE account SET deviceid = '${req.body.Deviceid}' WHERE idaccount = '${idaccount}'`,
-            function(err,results,fields){//réponse de la 2e query
-                if(err) throw err//si reponse mal passée on arrete le programme et on print l'erreur
-            })
-            connection.end()//on ferme la nvle connection
+            // function(err,results,fields){//réponse de la 2e query
+            //     if(err) throw err//si reponse mal passée on arrete le programme et on print l'erreur
+            // })
+            //on ferme la nvle connection
         }else{//si la query a rien retourné : le mdp est faux
             res.json({ID:0})//on reponds a la requete
         }
