@@ -50,7 +50,7 @@ serv.post("/",(req,response)=>{//si on a une requete de type POST au sous domain
                                     catch{port = false}
                                 console.log("port libre renvoyé : " + port)
                                 if(port){
-                                    console.log("on essaye de lancer le .exe")
+                                    console.log("lancement du .exe, arguments : -log, -port="+port)
                                     exec('E:\\Game\\WindowsNoEditor\\Dawn\\Binaries\\Win64\\DawnServer.exe',
                                         ['-log', `-port=${port}`]);//on lance le .exe
                                     connection.query(`UPDATE port SET idTeam = ${idTeam} WHERE port = ${port};`,
