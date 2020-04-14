@@ -30,24 +30,28 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
                 if(err) throw err
                 try{var idTeam = res[0].idTeam}
                     catch{var idTeam = false}
-                if(idTeam){//si le gars est dans une team
+                    console.log("idTeam renvoyé : " + idTeam)
+                    if(idTeam){//si le gars est dans une team
                     connection.query(`SELECT sessionport FROM team WHERE idTeam = '${idTeam}'`,//renvoie le port qui correspond à la team
                     function(e,r,fi){
                         if(e) throw e
                         try{var sessionport = r[0].sessionport}
                             catch{var sessionport = false}
+                        console.log("sessionport renvoyé : " + sessionport)
                         if(sessionport){//si un port lui est attribué => session déjà lancée
                             res.json({port:sessionport})//on repond a la requete avec le port correspondant à sa team
                         }else{
-                            connection.query("port de libre sur lequel lancer session",//FIXME: renvoie le port de libre sur lequel lancer session
+                            connection.query("SELECT port FROM port WHERE idTeam IS  NULL LIMIT 1;",
                             function(erreur, resultats, champs){
                                 if(erreur) throw erreur
-                                try{port = resultats[0].port}
+                                try{port = resultats[0].port || resultats[0].port[0] }
                                     catch{port = false}
+                                console.log("port libre renvoyé : " + port)
                                 if(port){
+                                    console.log("on essaye de lancer le .exe")
                                     exec('E:\\Game\\WindowsNoEditor\\Dawn\\Binaries\\Win64\\DawnServer.exe',
                                         ['-log', `-port=${port}`]);//on lance le .exe
-                                    connection.query("nvle session bien crée pr team : idTeam",//FIXME:nvle session bien crée pr team : idTeam
+                                    connection.query(`UPDATE port SET idTeam =${idTeam}WHERE port = ${port}';`,
                                     function(erreur1,resultats1,fields1){
                                         if(erreur1)throw erreur1
                                     })
