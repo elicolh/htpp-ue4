@@ -6,16 +6,6 @@ const serv = express()
     serv.use(express.static("public"))
     serv.use(bodyParser.json())
     serv.use(bodyParser.urlencoded({extended: true}))
-
-/*serv.post("localhost:5678",(req,res)=>{
-    connection.query(`SELECT idaccount FROM account WHERE username = '${pseudo}' AND password = '${password}'` , 
-    function (error, results, fields) {
-        if (error) throw error;
-        // res.json({ok:})
-    });
-    connection.end();
-})
-"SELECT idaccount FROM account WHERE username = 'server' AND password = 'a66a8e9b1cf6d2032724c37305b83cdda18c904e';"*/
 serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/" 
     var connection = mysql.createConnection({//on crée une nvl connection a la DB
         host     : 'localhost',
@@ -38,37 +28,33 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
             connection.query(`SELECT idTeam FROM account WHERE idaccount = '${idaccount}'`,//renvoie l'id de la team
             function(err,res,f){
                 if(err) throw err
-                try{
-                    var idTeam = res[0].idTeam
-                }catch{
-                    var idteam = false
-                }
+                try{var idTeam = res[0].idTeam}
+                    catch{var idTeam = false}
                 if(idTeam){//si le gars est dans une team
                     connection.query(`SELECT sessionport FROM team WHERE idTeam = '${idTeam}'`,//renvoie le port qui correspond à la team
                     function(e,r,fi){
                         if(e) throw e
-                        try{
-                            var sessionport = r[0].sessionport
-                        }catch{
-                            var sessionport = false
-                        }
+                        try{var sessionport = r[0].sessionport}
+                            catch{var sessionport = false}
                         if(sessionport){//si un port lui est attribué => session déjà lancée
                             res.json({port:sessionport})//on repond a la requete avec le port correspondant à sa team
                         }else{
-                            connection.query("port de libre sur lequel lancer session",
+                            connection.query("port de libre sur lequel lancer session",//FIXME: renvoie le port de libre sur lequel lancer session
                             function(erreur, resultats, champs){
                                 if(erreur) throw erreur
-                                try{
-                                    port = resultats[0].port
-                                }catch{
-                                    port = false
-                                }
+                                try{port = resultats[0].port}
+                                    catch{port = false}
                                 if(port){
-                                    exec('HelloJithin.exe'
-                                    , ['-log', `-port=${port}`]);
-                                   res.json({port:port})
+                                    exec('E:\\Game\\WindowsNoEditor\\Dawn\\Binaries\\Win64\\DawnServer.exe',
+                                        ['-log', `-port=${port}`]);//on lance le .exe
+                                    connection.query("nvle session bien crée pr team : idTeam",//FIXME:nvle session bien crée pr team : idTeam
+                                    function(erreur1,resultats1,fields1){
+                                        if(erreur1)throw erreur1
+                                    })
+                                    res.json({port:port})//on répond au json avec le nouveau port
                                 }else{
                                     console.error("la query a pas retourné de port sur lequel ouvrir la session")
+                                    res.json({port:0})//code erreur
                                 }
                             })
                         }
