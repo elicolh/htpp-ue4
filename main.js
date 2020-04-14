@@ -27,16 +27,56 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
     function (error, results, fields) {//reponse de la query
     if (error) throw error;//si reponse mal passée on arrete le programme et on print l'erreur
     try{
-        var result = results[0].idaccount
+        var idaccount = results[0].idaccount
     }catch{
-        var result = false
+        var idaccount = false
         console.log("---------------mauvaise connection---------------")
         console.log(req.body)
     }
-        if(result){//si la query a retourné un id : le mdp est correct
-            res.json({ID:1})//on repond a la requete
+        if(idaccount){//si la query a retourné un id : le mdp est correct
+            connection.query(`SELECT idTeam FROM account WHERE idaccount = '${idaccount}'`,//renvoie l'id de la team
+            function(err,res,f){
+                if(err) throw err
+                try{
+                    var idTeam = res[0].idTeam
+                }catch{
+                    var idteam = false
+                }
+                if(idTeam){//si le gars est dans une team
+                    connection.query(`SELECT sessionport FROM team WHERE idTeam = '${idTeam}'`,//renvoie le port qui correspond à la team
+                    function(e,r,fi){
+                        if(e) throw e
+                        try{
+                            var sessionport = r[0].sessionport
+                        }catch{
+                            var sessionport = false
+                        }
+                        if(sessionport){//si un port lui est attribué => session déjà lancée
+                            res.json({port:sessionport})//on repond a la requete avec le port correspondant à sa team
+                        }else{
+                            connection.query("port de libre sur lequel lancer session",
+                            function(erreur, resultats, champs){
+                                if(erreur) throw erreur
+                                try{
+                                    port = resultats[0].port
+                                }catch{
+                                    port = false
+                                }
+                                if(port){
+                                   //TODO: lancer session
+                                   res.json({port:port})
+                                }else{
+                                    console.error("la query a pas retourné de port sur lequel ouvrir la session")
+                                }
+                            })
+                        }
+                    })
+                }else{
+                    console.log("PAS DANS UNE TEAM")//TODO: supporter ça
+                }
+            })
             console.log(req.body)
-            connection.query(`UPDATE account SET deviceid = '${req.body.Deviceid}' WHERE idaccount = '${result}'`,
+            connection.query(`UPDATE account SET deviceid = '${req.body.Deviceid}' WHERE idaccount = '${idaccount}'`,
             function(err,results,fields){//réponse de la 2e query
                 if(err) throw err//si reponse mal passée on arrete le programme et on print l'erreur
             })
@@ -46,36 +86,6 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
         }
     });
 })
-serv.listen(5678, function () {//on lance l'écoute du serv
-    console.log('listening on port 5678')
+serv.listen(6999, function () {//on lance l'écoute du serv
+    console.log('listening on port 6999')
 })
-
-
-
-// serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/" 
-//     var connection = mysql.createConnection({//on crée une nvl connection a la DB
-//         host     : 'localhost',
-//         user     : 'authenconnect',
-//         password : 'elicolelo',
-//         database : 'account'
-//     });
-//     connection.connect()//init de la connection a la base sql
-//     connection.query(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`,//l'objet req.body contient les arguments de la requete (pseudo password et deviceid)
-//     function (error, results, fields) {//reponse de la query
-//         if (error) throw error;//si reponse mal passée on arrete le programme et on print l'erreur
-//         connection.end((err)=>{//une fois la connection fermée:
-//             if (err) throw err;//si la fermuture s'est mal pasée on arrete le programme et on print l'erreur
-//             if(results[0].idaccount){//si la query a retourné un id : le mdp est correct
-//                 res.json({ID:1})//on repond a la requete
-//                 connection.connect()//on ouvre une nvle connection
-//                 connection.query(`UPDATE account SET deviceid = '${req.body.deviceid}' WHERE idaccount = '${results[0].idaccount}'`,
-//                 function(err,results,fields){//réponse de la 2e query
-//                     if(err) throw err//si reponse mal passée on arrete le programme et on print l'erreur
-//                 })
-//                 connection.end()//on ferme la nvle connection
-//             }else{//si la query a rien retourné : le mdp est faux
-//                 res.json({ID:0})//on reponds a la requete
-//             }
-//         });
-//     });
-// })
