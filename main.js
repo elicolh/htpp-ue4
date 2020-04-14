@@ -6,7 +6,7 @@ const serv = express()
     serv.use(express.static("public"))
     serv.use(bodyParser.json())
     serv.use(bodyParser.urlencoded({extended: true}))
-serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/" 
+serv.post("/",(req,response)=>{//si on a une requete de type POST au sous domaine "/" 
     console.log("requete")
     var connection = mysql.createConnection({//on crée une nvl connection a la DB
         host     : 'localhost',
@@ -40,7 +40,7 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
                             catch{var sessionport = false}
                         console.log("sessionport renvoyé : " + sessionport)
                         if(sessionport){//si un port lui est attribué => session déjà lancée
-                            res.json({port:sessionport})//on repond a la requete avec le port correspondant à sa team
+                            response.json({port:sessionport})//on repond a la requete avec le port correspondant à sa team
                             connection.end()
                         }else{
                             connection.query("SELECT port FROM port WHERE idTeam IS  NULL LIMIT 1;",
@@ -57,10 +57,10 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
                                     function(erreur1,resultats1,fields1){
                                         if(erreur1)throw erreur1
                                     })
-                                    res.json({port:port})//on répond au json avec le nouveau port
+                                    response.json({port:port})//on répond au json avec le nouveau port
                                 }else{
                                     console.error("la query a pas retourné de port sur lequel ouvrir la session")
-                                    res.json({port:0})//code erreur
+                                    response.json({port:0})//code erreur
                                 }
                                 connection.end()
                             })
@@ -77,7 +77,7 @@ serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/"
             // })
             //on ferme la nvle connection
         }else{//si la query a rien retourné : le mdp est faux
-            res.json({ID:0})//on reponds a la requete
+            response.json({ID:0})//on reponds a la requete
         }
     });
 })
