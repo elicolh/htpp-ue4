@@ -7,6 +7,7 @@ const serv = express()
     serv.use(bodyParser.json())
     serv.use(bodyParser.urlencoded({extended: true}))
 serv.post("/",(req,res)=>{//si on a une requete de type POST au sous domaine "/" 
+    console.log("requete")
     var connection = mysql.createConnection({//on crée une nvl connection a la DB
         host     : 'localhost',
         user     : 'authenconnect',
