@@ -26,7 +26,10 @@ serv.post("/", (req, response) => {//si on a une requete de type POST au sous do
                 console.log(req.body)
             }
             if (idaccount) {//si la query a retourné un id : le mdp est correct
-                connection.query(`SELECT idTeam FROM account WHERE idaccount = '${idaccount}'`,//renvoie l'id de la team
+                connection.query(`UPDATE account SET deviceid = '${req.body.Deviceid}' WHERE idaccount = '${idaccount}'`,
+                function(err,results,fields){//réponse de la 2e query
+                    if(err) throw err//si reponse mal passée on arrete le programme et on print l'erreur
+                    connection.query(`SELECT idTeam FROM account WHERE idaccount = '${idaccount}'`,//renvoie l'id de la team
                     function (err, res, f) {
                         if (err) throw err
                         try { var idTeam = res[0].idTeam }
@@ -79,11 +82,8 @@ serv.post("/", (req, response) => {//si on a une requete de type POST au sous do
                         }
                     })
                 console.log(req.body)
-                // connection.query(`UPDATE account SET deviceid = '${req.body.Deviceid}' WHERE idaccount = '${idaccount}'`,
-                // function(err,results,fields){//réponse de la 2e query
-                //     if(err) throw err//si reponse mal passée on arrete le programme et on print l'erreur
-                // })
                 //on ferme la nvle connection
+                })
             } else {//si la query a rien retourné : le mdp est faux
                 response.json({ ID: 0 })//on reponds a la requete
                 //connection.end()
