@@ -47,7 +47,6 @@ serv.post("/",async function(request,response){
         console.log(`port bien renvoyé en json : sessionport = ${sessionport}`)
     }else{
         result = await newQuery("SELECT port FROM port WHERE idTeam IS NULL LIMIT 1;")
-        console.log(result)
         try{
             var port = result.port
         }catch{
@@ -55,7 +54,7 @@ serv.post("/",async function(request,response){
             response.json({port:-2})
             return
         }
-        console.log("lancement du .exe")
+        console.log(`lancement du .exe, port renvoyé = ${port}`)
         exec(__dirname + "/startSession.bat", [port])
         response.json({port:port})
         await newQuery(`UPDATE team SET sessionport = ${port} WHERE idTeam = ${idTeam};`)
