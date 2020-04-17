@@ -17,7 +17,7 @@ var connection;
 serv.post("/",async function(request,response){
     console.log("nvle requete")
     // connection.connect()//init de la connection a la base sql
-    connection = getPoolConnection()
+    connection = await getPoolConnection()
     var result = await newQuery(`SELECT idaccount FROM account WHERE username = '${request.body.pseudo}' AND password = '${request.body.password}'`)
     try{var idaccount = result.idaccount}
     catch{
