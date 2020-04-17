@@ -2,6 +2,7 @@ const mysql = require("mysql")
 const express = require("express")
 const bodyParser = require("body-parser")
 var exec = require('child_process').execFile;
+require('colors')
 const serv = express()
     serv.use(express.static("public"))
     serv.use(bodyParser.json())
@@ -18,7 +19,7 @@ serv.post("/",async function(request,response){
     var result = await newQuery(`SELECT idaccount FROM account WHERE username = '${request.body.pseudo}' AND password = '${request.body.password}'`)
     try{var idaccount = result.idaccount}
     catch{
-        console.log("---------------mauvaise connection---------------")
+        console.log("---------------mauvaise connection---------------".red)
         console.log(request.body)
         response.json({port:0})
         connection.end()
@@ -28,7 +29,7 @@ serv.post("/",async function(request,response){
     result = await newQuery(`SELECT idTeam FROM account WHERE idaccount = '${idaccount}'`)
     try{var idTeam = result.idTeam}
     catch{
-        console.log("PAS DANS UNE TEAM")
+        console.log("PAS DANS UNE TEAM".red)
         response.json({port:-1})
         connection.end()
         return
@@ -45,7 +46,7 @@ serv.post("/",async function(request,response){
         try{
             var port = result[0].port || result[0].port[0]
         }catch{
-            console.log("la query a pas retourné de port libre")
+            console.log("la query a pas retourné de port libre".red)
             response.json({port:-2})
             connection.end()
             return
