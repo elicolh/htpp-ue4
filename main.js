@@ -47,6 +47,7 @@ serv.post("/",async function(request,response){
         console.log(`port bien renvoyé en json : sessionport = ${sessionport}`)
     }else{
         result = await newQuery("SELECT port FROM port WHERE idTeam IS NULL LIMIT 1;")
+        console.log(result)
         try{
             var port = result[0].port || result[0].port[0]
         }catch{
