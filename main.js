@@ -7,22 +7,23 @@ const serv = express()
     serv.use(express.static("public"))
     serv.use(bodyParser.json())
     serv.use(bodyParser.urlencoded({ extended: true }))
-var connection = mysql.createConnection({//on crée une nvl connection a la DB
+var pool = mysql.createPool({//on crée une nvl connection a la DB
     host: 'localhost',
     user: 'authenconnect',
     password: 'elicolelo',
     database: 'account'
 });
+var connection;
 serv.post("/",async function(request,response){
     console.log("nvle requete")
-    connection.connect()//init de la connection a la base sql
+    // connection.connect()//init de la connection a la base sql
+    connection = getPoolConnection()
     var result = await newQuery(`SELECT idaccount FROM account WHERE username = '${request.body.pseudo}' AND password = '${request.body.password}'`)
     try{var idaccount = result.idaccount}
     catch{
         console.log("---------------mauvaise connection---------------".red)
         console.log(request.body)
         response.json({port:0})
-        connection.end()
         return
     }
     await newQuery(`UPDATE account SET deviceid = '${request.body.Deviceid}' WHERE idaccount = '${idaccount}'`)
@@ -31,7 +32,6 @@ serv.post("/",async function(request,response){
     catch{
         console.log("PAS DANS UNE TEAM".red)
         response.json({port:-1})
-        connection.end()
         return
     }
     console.log(`idTeam renvoyé :${idTeam}`)
@@ -48,7 +48,6 @@ serv.post("/",async function(request,response){
         }catch{
             console.log("la query a pas retourné de port libre".red)
             response.json({port:-2})
-            connection.end()
             return
         }
         console.log("lancement du .exe")
@@ -57,7 +56,7 @@ serv.post("/",async function(request,response){
         await newQuery(`UPDATE team SET sessionport = ${port} WHERE idTeam = ${idTeam};`)
         await newQuery(`UPDATE port SET idTeam = ${idTeam} WHERE port = ${port};`)
     }
-    connection.end()
+    connection.destroy()
 })
 
 serv.listen(6999, function () {//on lance l'écoute du serv
@@ -68,6 +67,14 @@ function newQuery(query){
         connection.query(query,(error,results,field)=>{
             if(error) throw error
             resolve(results[0])
+        })
+    })
+}
+function getPoolConnection(){
+    return new Promise((res,rej)=>{
+        pool.getConnection((err,connection)=>{
+            if(err) console.error(err.red)
+            res(connection)
         })
     })
 }
