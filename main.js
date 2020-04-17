@@ -44,6 +44,7 @@ serv.post("/",async function(request,response){
         }catch{
             console.log("la query a pas retourné de port libre")
             response.json({port:-2})
+            return
         }
         console.log("lancement du .exe")
         exec(__dirname + "/startSession.bat", [port])
