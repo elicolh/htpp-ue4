@@ -12,18 +12,18 @@ var connection = mysql.createConnection({//on crée une nvl connection a la DB
     password: 'elicolelo',
     database: 'account'
 });
-serv.post("/",async function(request,resolve){
+serv.post("/",async function(request,response){
     console.log("nvle requete")
     connection.connect()//init de la connection a la base sql
-    var result = await newQuery(`SELECT idaccount FROM account WHERE username = '${req.body.pseudo}' AND password = '${req.body.password}'`)
+    var result = await newQuery(`SELECT idaccount FROM account WHERE username = '${request.body.pseudo}' AND password = '${request.body.password}'`)
     try{var idaccount = result.idaccount}
     catch{
         console.log("---------------mauvaise connection---------------")
-        console.log(req.body)
+        console.log(request.body)
         response.json({port:0})
         return
     }
-    await newQuery(`UPDATE account SET deviceid = '${req.body.Deviceid}' WHERE idaccount = '${idaccount}'`)
+    await newQuery(`UPDATE account SET deviceid = '${request.body.Deviceid}' WHERE idaccount = '${idaccount}'`)
     result = await newQuery(`SELECT idTeam FROM account WHERE idaccount = '${idaccount}'`)
     try{var idTeam = result}
     catch{
