@@ -40,6 +40,12 @@ serv.post("/",async function(request,response){
         var sessionport = result.sessionport
     }
     catch{
+        var sessionport = null
+    }
+    if(sessionport){
+        response.json({ port: sessionport })
+        console.log(`port bien renvoyé en json : sessionport = ${sessionport}`)
+    }else{
         result = await newQuery("SELECT port FROM port WHERE idTeam IS NULL LIMIT 1;")
         try{
             var port = result[0].port || result[0].port[0]
@@ -54,8 +60,6 @@ serv.post("/",async function(request,response){
         await newQuery(`UPDATE team SET sessionport = ${port} WHERE idTeam = ${idTeam};`)
         await newQuery(`UPDATE port SET idTeam = ${idTeam} WHERE port = ${port};`)
     }
-    response.json({ port: sessionport })
-    console.log(`port bien renvoyé en json : sessionport = ${sessionport}`)
     connection.destroy()
 })
 
