@@ -21,6 +21,7 @@ serv.post("/",async function(request,response){
         console.log("---------------mauvaise connection---------------")
         console.log(request.body)
         response.json({port:0})
+        connection.end()
         return
     }
     await newQuery(`UPDATE account SET deviceid = '${request.body.Deviceid}' WHERE idaccount = '${idaccount}'`)
@@ -29,6 +30,7 @@ serv.post("/",async function(request,response){
     catch{
         console.log("PAS DANS UNE TEAM")
         response.json({port:-1})
+        connection.end()
         return
     }
     console.log(`idTeam renvoyé :${idTeam}`)
@@ -45,6 +47,7 @@ serv.post("/",async function(request,response){
         }catch{
             console.log("la query a pas retourné de port libre")
             response.json({port:-2})
+            connection.end()
             return
         }
         console.log("lancement du .exe")
