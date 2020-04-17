@@ -49,7 +49,7 @@ serv.post("/",async function(request,response){
         result = await newQuery("SELECT port FROM port WHERE idTeam IS NULL LIMIT 1;")
         console.log(result)
         try{
-            var port = result[0].port || result[0].port[0]
+            var port = result.port
         }catch{
             console.log("la query a pas retourné de port libre".red)
             response.json({port:-2})
