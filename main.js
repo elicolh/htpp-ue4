@@ -45,6 +45,7 @@ serv.post("/",async function(request,resolve){
             console.log("la query a pas retourné de port libre")
             response.json({port:-2})
         }
+        console.log("lancement du .exe")
         exec(__dirname + "/startSession.bat", [port])
         response.json({port:port})
         await newQuery(`UPDATE team SET sessionport = ${port} WHERE idTeam = ${idTeam};`)
