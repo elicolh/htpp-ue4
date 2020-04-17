@@ -25,7 +25,7 @@ serv.post("/",async function(request,response){
     }
     await newQuery(`UPDATE account SET deviceid = '${request.body.Deviceid}' WHERE idaccount = '${idaccount}'`)
     result = await newQuery(`SELECT idTeam FROM account WHERE idaccount = '${idaccount}'`)
-    try{var idTeam = result}
+    try{var idTeam = result.idTeam}
     catch{
         console.log("PAS DANS UNE TEAM")
         response.json({port:-1})
