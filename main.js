@@ -53,6 +53,7 @@ serv.post("/",async function(request,response){
         await newQuery(`UPDATE team SET sessionport = ${port} WHERE idTeam = ${idTeam};`)
         await newQuery(`UPDATE port SET idTeam = ${idTeam} WHERE port = ${port};`)
     }
+    connection.end()
 })
 
 serv.listen(6999, function () {//on lance l'écoute du serv
