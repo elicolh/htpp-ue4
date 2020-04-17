@@ -3,6 +3,7 @@ const express = require("express")
 const bodyParser = require("body-parser")
 var exec = require('child_process').execFile;
 require('colors')
+const LAMUSQIUE = require("./LAMUSIQUE")
 const serv = express()
     serv.use(express.static("public"))
     serv.use(bodyParser.json())
