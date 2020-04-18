@@ -4,7 +4,7 @@ var mdpField = document.getElementById("mdp")
 
 
 envoie.addEventListener("click",function(){
-    fetch("http://77.151.84.172:2832/", {
+    fetch("http://localhost:6998/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
