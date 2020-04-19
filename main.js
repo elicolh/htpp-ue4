@@ -21,13 +21,19 @@ serv.post("/",async function(request,response){
     // connection.connect()//init de la connection a la base sql
     connection = await getPoolConnection()
     var result = await newQuery(`SELECT password FROM account WHERE name = '${request.body.pseudo}';`)
-    if (!(await bcrypt.compare(request.body.password ,result)))
+    try{
+        var password = result.password
+    }catch{
+        console.log("le compte existe pas")
+        return
+    }
+    if (!await bcrypt.compare(request.body.password ,password))
         {
-        console.log("---------------mauvaise connection---------------".red)
+        console.log("---------------mauvais mdp---------------".red)
         console.log(request.body)
         response.json({port:0})
         }
-    else
+    else //mdp correct
         {
         var id = await newQuery(`SELECT id FROM account WHERE name = '${request.body.pseudo}'`)
         await newQuery(`UPDATE account SET deviceid = '${request.body.Deviceid}' WHERE id = '${id}'`)
