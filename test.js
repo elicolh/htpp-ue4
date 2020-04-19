@@ -13,8 +13,14 @@ var connection = await new Promise(function(resolve,reject){
 
 
 setInterval(function(){
-    console.log(await newQuery("SELECT * from table"))
-    if(a){
+    var reponse = await newQuery("SELECT pseudo from table")
+    console.log(reponse.pseudo)
+    try{
+        var pseudo = reponse.pseudo
+    }catch{
+        var pseudo = null
+    }
+    if(pseudo){
         
     }
 },5000)
