@@ -1,5 +1,6 @@
-const bcrypt = require('bcrypt');//:flag_dz: :flag_dz: :flag_dz: :flag_dz: :flag_dz:
-const mysql = require("mysql")      
+//:flag_dz: :flag_dz: :flag_dz: :flag_dz: :flag_dz:
+const mysql = require("mysql")
+const bcrypt = require('bcrypt');      
 const express = require("express")
 const bodyParser = require("body-parser")
 var exec = require('child_process').execFile;
@@ -23,10 +24,11 @@ serv.post("/",async function(request,response){
     var result = await newQuery(`SELECT password FROM account WHERE name = '${request.body.pseudo}';`)
     try{
         var password = result.password
-    }catch{
+        }
+    catch{
         console.log("le compte existe pas")
         return
-    }
+        }
     if (!await bcrypt.compare(request.body.password ,password))
         {
         console.log("---------------mauvais mdp---------------".red)
@@ -36,16 +38,16 @@ serv.post("/",async function(request,response){
     else //mdp correct
         {
         var id = await newQuery(`SELECT id FROM account WHERE name = '${request.body.pseudo}'`)
-        await newQuery(`UPDATE account SET deviceid = '${request.body.Deviceid}' WHERE id = '${id}'`)
-        result = await newQuery(`SELECT idTeam FROM account WHERE id = '${id}'`)
-        try{var idTeam = result.idTeam}
+        await newQuery(`UPDATE account SET deviceid = "${request.body.Deviceid}" WHERE id = '${id}';`)
+        result = await newQuery(`SELECT idteam FROM account WHERE id = '${id}'`)
+        try{var idteam = result.idteam}
         catch{
             console.log("PAS DANS UNE TEAM".red)
             response.json({port:-1})
             return
         }
-        console.log(`idTeam renvoyé :${idTeam}`)
-        result = await newQuery(`SELECT sessionport FROM team WHERE idTeam = '${idTeam}'`)
+        console.log(`idteam renvoyé :${idteam}`)
+        result = await newQuery(`SELECT sessionport FROM team WHERE idteam = '${idteam}'`)
         try{
             var sessionport = result.sessionport
         }
@@ -56,7 +58,7 @@ serv.post("/",async function(request,response){
             response.json({ port: sessionport })
             console.log(`port bien renvoyé en json : sessionport = ${sessionport}`)
         }else{
-            result = await newQuery("SELECT port FROM port WHERE idTeam IS NULL LIMIT 1;")
+            result = await newQuery("SELECT port FROM port WHERE idteam IS NULL LIMIT 1;")
             try{
                 var port = result.port
             }catch{
