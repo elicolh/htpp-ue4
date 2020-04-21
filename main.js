@@ -38,7 +38,7 @@ serv.post("/",async function(request,response){
     else //mdp correct
         {
         var id = await newQuery(`SELECT id FROM account WHERE name = '${request.body.pseudo}'`)
-        //await newQuery(`UPDATE account SET deviceid = "${request.body.Deviceid}" WHERE id = ${id}`)
+        await newQuery(`UPDATE account SET deviceid = "${request.body.Deviceid}" WHERE id = '${id}'`)
         result = await newQuery(`SELECT idteam FROM account WHERE id = '${id}'`)
         try{var idteam = result.idteam}
         catch{
