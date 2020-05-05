@@ -33,7 +33,7 @@ serv.post("/",async function(request,response){
         {
         console.log("---------------mauvais mdp---------------".red)
         console.log(request.body)
-        response.json({port:0})
+        response.status(200).json({port:0})
         }
     else //mdp correct
         {
@@ -44,7 +44,7 @@ serv.post("/",async function(request,response){
         try{var idteam = result.idteam}
         catch{
             console.log("PAS DANS UNE TEAM".red)
-            response.json({port:-1})
+            response.status(200).json({port:-1})
             return
         }
         console.log(`idteam renvoyé :${idteam}`)
@@ -56,7 +56,7 @@ serv.post("/",async function(request,response){
             var sessionport = null
         }
         if(sessionport){
-            response.json({ port: sessionport })
+            response.status(200).json({ port: sessionport })
             console.log(`port bien renvoyé en json : sessionport = ${sessionport}`)
         }else{
             result = await newQuery("SELECT port FROM port WHERE idteam IS NULL LIMIT 1;")
@@ -64,12 +64,12 @@ serv.post("/",async function(request,response){
                 var port = result.port
             }catch{
                 console.log("la query a pas retourné de port libre".red)
-                response.json({port:-2})
+                response.status(200).json({port:-2})
                 return
             }
             console.log(`lancement du .exe, port renvoyé = ${port}`)
             exec(__dirname + "/startSession.bat", [port])
-            response.json({port:port})
+            response.status(200).json({port:port})
             await newQuery(`UPDATE team SET sessionport = ${port} WHERE idTeam = ${idTeam};`)
             await newQuery(`UPDATE port SET idTeam = ${idTeam} WHERE port = ${port};`)
         }
