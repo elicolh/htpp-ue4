@@ -70,7 +70,7 @@ serv.listen(6999, function () {//on lance l'écoute du serv
 function newQuery(query){
     return new Promise((resolve,reject)=>{
         connection.query(query,(error,results,field)=>{
-            if(error) throw error
+            if(error) console.error(error)
             resolve(results[0])
         })
     })
