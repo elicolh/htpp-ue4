@@ -24,7 +24,7 @@ serv.post("/",async function(request,response){
     catch{
         console.log("---------------mauvaise connection---------------".red)
         console.log(request.body)
-        response.json({port:0})
+        response.status(200).json({port:0})
         return
     }
     await newQuery(`UPDATE account SET deviceid = '${request.body.Deviceid}' WHERE idaccount = '${idaccount}'`)
@@ -32,7 +32,7 @@ serv.post("/",async function(request,response){
     try{var idTeam = result.idTeam}
     catch{
         console.log("PAS DANS UNE TEAM".red)
-        response.json({port:-1})
+        response.status(200).json({port:-1})
         return
     }
     console.log(`idTeam renvoyé :${idTeam}`)
@@ -44,7 +44,7 @@ serv.post("/",async function(request,response){
         var sessionport = null
     }
     if(sessionport){
-        response.json({ port: sessionport })
+        response.status(200).json({ port: sessionport })
         console.log(`port bien renvoyé en json : sessionport = ${sessionport}`)
     }else{
         result = await newQuery("SELECT port FROM port WHERE idTeam IS NULL LIMIT 1;")
@@ -52,12 +52,12 @@ serv.post("/",async function(request,response){
             var port = result.port
         }catch{
             console.log("la query a pas retourné de port libre".red)
-            response.json({port:-2})
+            response.status(200).json({port:-2})
             return
         }
         console.log(`lancement du .exe, port renvoyé = ${port}`)
         exec(__dirname + "/startSession.bat", [port])
-        response.json({port:port})
+        response.status(200).json({port:port})
         await newQuery(`UPDATE team SET sessionport = ${port} WHERE idTeam = ${idTeam};`)
         await newQuery(`UPDATE port SET idTeam = ${idTeam} WHERE port = ${port};`)
     }
